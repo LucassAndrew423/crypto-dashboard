@@ -1,55 +1,58 @@
 <div class="dashboard-container">
-  <div class="header-actions">
-    <h2>📈 Top Criptomoedas</h2>
-    <button (click)="refreshData()" class="btn-refresh">🔄 Refresh</button>
-  </div>
+    <div class="header-actions">
+        <h2>📈 Top Criptomoedas</h2>
+        <button (click)="refreshData()" class="btn-refresh">🔄 Refresh</button>
+    </div>
 
-  <div class="search-container">
-    <input 
-      type="text" 
-      placeholder="Pesquisar moeda (ex: btc, ethereum...)" 
-      (input)="updateSearch($event)"
-      class="search-input"
-    >
-  </div>
+    <div class="search-container">
+        <input type="text" placeholder="Pesquisar moeda (ex: btc, ethereum...)" (input)="updateSearch($event)"
+            class="search-input">
+    </div>
 
-  @if (filteredCoins().length > 0) {
+    @if (filteredCoins().length > 0) {
     <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Moeda</th>
-          <th>Preço</th>
-          <th>Variação 24h</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (coin of filteredCoins(); track coin.id) {
-          <tr>
-            <td>{{ coin.market_cap_rank }}</td>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Moeda</th>
+                <th>Preço</th>
+                <th>Variação 24h</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (coin of filteredCoins(); track coin.id) {
+            <th></th>
             <td>
-              <div class="coin-info">
-                <img [src]="coin.image" width="32" height="32" [alt]="coin.name">
-                <strong>{{ coin.name }}</strong>
-                <span style="color: #64748b">{{ coin.symbol | uppercase }}</span>
-              </div>
+                <button (click)="cryptoService.toggleFavorite(coin.id)" class="btn-fav">
+                    {{ cryptoService.favorites().includes(coin.id) ? '⭐' : '☆' }}
+                </button>
             </td>
-            <td>{{ coin.current_price | currency:'USD':'symbol':'1.2-2' }}</td>
-            <td [style.color]="coin.price_change_percentage_24h > 0 ? '#4ade80' : '#f87171'">
-              {{ coin.price_change_percentage_24h > 0 ? '▲' : '▼' }} 
-              {{ coin.price_change_percentage_24h | number:'1.2-2' }}%
-            </td>
-          </tr>
-        }
-      </tbody>
+
+            <tr>
+                <td>{{ coin.market_cap_rank }}</td>
+                <td>
+                    <div class="coin-info">
+                        <img [src]="coin.image" width="32" height="32" [alt]="coin.name">
+                        <strong>{{ coin.name }}</strong>
+                        <span style="color: #64748b">{{ coin.symbol | uppercase }}</span>
+                    </div>
+                </td>
+                <td>{{ coin.current_price | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td [style.color]="coin.price_change_percentage_24h > 0 ? '#4ade80' : '#f87171'">
+                    {{ coin.price_change_percentage_24h > 0 ? '▲' : '▼' }}
+                    {{ coin.price_change_percentage_24h | number:'1.2-2' }}%
+                </td>
+            </tr>
+            }
+        </tbody>
     </table>
-  } @else if (searchTerm() !== '') {
+    } @else if (searchTerm() !== '') {
     <div style="text-align: center; padding: 50px; color: #94a3b8;">
-      <p>Nenhuma moeda encontrada para "{{ searchTerm() }}" 🔍</p>
+        <p>Nenhuma moeda encontrada para "{{ searchTerm() }}" 🔍</p>
     </div>
-  } @else {
+    } @else {
     <div style="text-align: center; padding: 50px;">
-      <p>Buscando dados no mercado... ⏳</p>
+        <p>Buscando dados no mercado... ⏳</p>
     </div>
-  }
+    }
 </div>

@@ -1,1 +1,45 @@
-<p>coin-detail works!</p>
+<div class="detail-container">
+    @if (loading()) {
+    <div class="loader">Carregando detalhes... 🚀</div>
+    } @else if (coin()) {
+    <div class="detail-header">
+        <button routerLink="/" class="btn-back">⬅ Voltar</button>
+        <div class="coin-title">
+            @if (coin()?.image?.large) {
+            <img [src]="coin()?.image?.large" [alt]="coin()?.name" width="64">
+            }
+            <h1>{{ coin()?.name }} <span>({{ coin()?.symbol | uppercase }})</span></h1>
+        </div>
+    </div>
+    <p [class.up]="coin()?.market_data?.price_change_percentage_24h! > 0"
+        [class.down]="coin()?.market_data?.price_change_percentage_24h! < 0">
+        {{ coin()?.market_data?.current_price?.usd | currency:'USD' }}
+    </p>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <label>Preço Atual</label>
+            <p>{{ coin()?.market_data?.current_price?.usd | currency:'USD' }}</p>
+        </div>
+        <div class="stat-card">
+            <label>Máxima (24h)</label>
+            <p class="up">{{ coin()?.market_data?.high_24h?.usd | currency:'USD' }}</p>
+        </div>
+        <div class="stat-card">
+            <label>Mínima (24h)</label>
+            <p class="down">{{ coin()?.market_data?.low_24h?.usd | currency:'USD' }}</p>
+        </div>
+        <div class="stat-card">
+            <label>Market Cap</label>
+            <p>{{ coin()?.market_data?.market_cap?.usd | number }}</p>
+        </div>
+    </div>
+
+    <div class="description">
+        <h3>Sobre</h3>
+        <p [innerHTML]="coin()?.description?.en"></p>
+    </div>
+    } @else {
+    <p>Moeda não encontrada. 😕</p>
+    }
+</div>
